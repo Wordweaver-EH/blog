@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyrdweaver Blog</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --link-color: #0066cc;
+            --header-bg: #f4f4f4;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --link-color: #66b3ff;
+            --header-bg: #2a2a2a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--header-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .site-title {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .piece-title {
+            font-size: 1.2em;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .dark-mode-toggle {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            margin-top: 60px; /* Adjust based on header height */
+        }
+        
+        .toc {
+            width: 20%;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            background-color: var(--header-bg);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .content {
+            width: 60%;
+            margin-left: 20%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .margin-notes {
+            width: 20%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .note-anchor {
+            text-decoration: none;
+            border-bottom: 1px dashed var(--link-color);
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        .note-number {
+            font-size: 0.7em;
+            vertical-align: super;
+            color: var(--link-color);
+            margin-left: 2px;
+        }
+        
+        .margin-note {
+            font-size: 0.9em;
+            color: var(--text-color);
+            position: absolute;
+            left: 20px;
+            width: calc(100% - 40px);
+            transition: background-color 0.3s ease;
+        }
+
+        .margin-note::before {
+            content: attr(data-number);
+            font-weight: bold;
+            color: var(--link-color);
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .margin-note.highlighted {
+            background-color: rgba(255, 255, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            .toc {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .content {
+                width: 100%;
+                margin-left: 0;
+            }
+            .margin-notes {
+                width: 100%;
+                position: static;
+            }
+            .margin-note {
+                position: static;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="site-title">Wyrdweaver</div>
+        <div class="piece-title">Blog Post Title</div>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+    </header>
+
+    <div class="content-wrapper">
+        <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#section1">Section 1</a></li>
+                <li><a href="#section2">Section 2</a></li>
+                <li><a href="#section3">Section 3</a></li>
+            </ul>
+        </nav>
+        
+        <main class="content">
+            <article>
+                <section id="section1">
+                    <h2>Section 1</h2>
+                    <p>This is the content of section 1. You can add your blog post content here. 
+                       <span class="note-anchor" data-note="1">This text has a margin note</span> associated with it.</p>
+                    <p>Here's some more text to demonstrate spacing.</p>
+                    <p>And even more text to show how notes align.</p>
+                </section>
+                
+                <section id="section2">
+                    <h2>Section 2</h2>
+                    <p>This is the content of section 2. Continue adding your blog post content in this format.</p>
+                    <p>Here's <span class="note-anchor" data-note="2">another example</span> of text with a margin note.</p>
+                    <p>More text to show spacing between notes.</p>
+                </section>
+                
+                <section id="section3">
+                    <h2>Section 3</h2>
+                    <p>This is the content of section 3. Wrap up your blog post here.</p>
+                    <p>Let's add <span class="note-anchor" data-note="3">one more note</span> to demonstrate alignment.</p>
+                </section>
+            </article>
+        </main>
+        
+        <aside class="margin-notes">
+            <!-- Margin notes will be dynamically inserted here by JavaScript -->
+        </aside>
+    </div>
+
+    <script>
+        const marginNotes = [
+            { id: 1, text: "This is a margin note for the dashed underlined text in section 1. It provides additional context or commentary." },
+            { id: 2, text: "Here's another margin note, relating to the dashed underlined text in section 2." },
+            { id: 3, text: "And a final note to show alignment at the bottom of the page." }
+        ];
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const marginNotesContainer = document.querySelector('.margin-notes');
+
+            marginNotes.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'margin-note';
+                noteElement.id = `note-${note.id}`;
+                noteElement.textContent = note.text;
+                noteElement.setAttribute('data-number', note.id);
+                marginNotesContainer.appendChild(noteElement);
+
+                // Add number to note anchor
+                const anchor = document.querySelector(`.note-anchor[data-note="${note.id}"]`);
+                const numberSpan = document.createElement('span');
+                numberSpan.className = 'note-number';
+                numberSpan.textContent = note.id;
+                anchor.appendChild(numberSpan);
+            });
+
+            function positionNotes() {
+                const noteAnchors = document.querySelectorAll('.note-anchor');
+                noteAnchors.forEach(anchor => {
+                    const noteId = anchor.getAttribute('data-note');
+                    const note = document.getElementById(`note-${noteId}`);
+                    const anchorRect = anchor.getBoundingClientRect();
+                    const containerRect = marginNotesContainer.getBoundingClientRect();
+                    note.style.top = `${anchorRect.top - containerRect.top}px`;
+                });
+            }
+
+            positionNotes();
+            window.addEventListener('resize', positionNotes);
+
+            function scrollToElement(element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.classList.add('highlighted');
+                setTimeout(() => element.classList.remove('highlighted'), 2000);
+            }
+
+            const noteAnchors = document.querySelectorAll('.note-anchor');
+            noteAnchors.forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const noteId = this.getAttribute('data-note');
+                    const note = document.getElementById(`note-${noteId}`);
+                    scrollToElement(note);
+                });
+            });
+
+            // Add click event to margin note numbers
+            marginNotesContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('margin-note') || e.target.parentElement.classList.contains('margin-note')) {
+                    const noteId = e.target.getAttribute('data-number') || e.target.parentElement.getAttribute('data-number');
+                    const anchor = document.querySelector(`.note-anchor[data-note="${noteId}"]`);
+                    scrollToElement(anchor);
+                }
+            });
+
+            // Smooth scrolling for ToC links
+            document.querySelectorAll('.toc a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
